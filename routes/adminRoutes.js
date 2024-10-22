@@ -5,24 +5,28 @@ const { validateCategory, validateProduct, validateCoupon, validateQandA } = req
 
 const { handleCreateCategory, handleGetCategory } = require("../controllers/admin/category");
 
-const { handleProduct, handleGetAllProducts, handleUpdateProduct } = require("../controllers/admin/product");
+const { handleProduct, handleGetAllProducts, handleUpdateProduct, handleDeleteProduct } = require("../controllers/admin/product");
 
-const { handlePostFonts, handleGetAllFonts } = require("../controllers/admin/customiseFonts");
+const { handlePostFonts } = require("../controllers/admin/customiseFonts");
 
-const { handlePostFontColour, handleGetAllFontColours } = require("../controllers/admin/customiseFontColour");
+const { handlePostFontColour } = require("../controllers/admin/customiseFontColour");
 
-const { handlePostFontSize, handleGetAllFontsizes } = require("../controllers/admin/customiseFontSize");
+const { handlePostFontSize } = require("../controllers/admin/customiseFontSize");
 
 const { handleGetAllOrder, handleUpdateOrderStatus } = require("../controllers/admin/order");
 
 const { isLogIn, allowedTo } = require("../middleware/auth");
 
 // const { imageValidation } = require("../middleware/image");
-const { createNewCoupon, getAllCoupon, updateCoupon, deleteCoupon } = require("../controllers/admin/coupon");
+const { createNewCoupon, updateCoupon, deleteCoupon } = require("../controllers/admin/coupon");
 
 const { handleAllMessage } = require("../controllers/admin/contactUs");
 
-const { handleQandA, updateQandA, deleteQandA, getAllQandA } = require("../controllers/admin/askQuestion")
+const { handleQandA, updateQandA, deleteQandA } = require("../controllers/admin/askQuestion");
+
+const { handlePostGallery, handleDeleteGallery } = require("../controllers/admin/galleriesController");
+
+const { createAddsOn } = require("../controllers/admin/addsOnOfferController");
 
 
 
@@ -32,29 +36,23 @@ router.get("/get-category", isLogIn, allowedTo("admin"), handleGetCategory);
 
 router.post("/product", validateProduct, isLogIn, allowedTo("admin"), handleProduct);
 
-router.get("/all-products/:id", isLogIn, allowedTo("admin"), handleGetAllProducts);
+router.get("/all-products", isLogIn, allowedTo("admin"), handleGetAllProducts);
 
-router.put("/update-product/:id", isLogIn, allowedTo("admin"), handleUpdateProduct)
+router.delete("/delete-product", isLogIn, allowedTo("admin"), handleDeleteProduct)
+
+router.put("/update-product", isLogIn, allowedTo("admin"), handleUpdateProduct)
 
 router.post("/post-font", isLogIn, allowedTo("admin"), handlePostFonts);
 
-router.get("/all-fonts", isLogIn, allowedTo("admin"), handleGetAllFonts);
-
 router.post("/post-font-colour", isLogIn, allowedTo("admin"), handlePostFontColour);
 
-router.get("/all-font-colours", isLogIn, allowedTo("admin"), handleGetAllFontColours);
-
 router.post("/post-font-size", isLogIn, allowedTo("admin"), handlePostFontSize);
-
-router.get("/all-font-sizes", isLogIn, allowedTo("admin"), handleGetAllFontsizes);
 
 router.get("/all-orders", isLogIn, allowedTo("admin"), handleGetAllOrder);
 
 router.post("/update-order-status/:id", isLogIn, allowedTo("admin"), handleUpdateOrderStatus);
 
 router.post("/create-coupon", isLogIn, allowedTo("admin"), validateCoupon, createNewCoupon);
-
-router.get("/all-coupons", isLogIn, allowedTo("admin"), getAllCoupon);
 
 router.put("/update-coupon/:id", isLogIn, allowedTo("admin"), updateCoupon);
 
@@ -64,11 +62,17 @@ router.get("/all-contacts", isLogIn, allowedTo("admin"), handleAllMessage);
 
 router.post("/question-answer", isLogIn, allowedTo("admin"), validateQandA, handleQandA);
 
-router.put("/update/:id", isLogIn, allowedTo("admin"), updateQandA);
+router.put("/update", isLogIn, allowedTo("admin"), updateQandA);
 
-router.post("/delete/:id", isLogIn, allowedTo("admin"), deleteQandA);
+router.post("/delete", isLogIn, allowedTo("admin"), deleteQandA);
 
-router.get("/all-questions", isLogIn, allowedTo("admin"), getAllQandA);
+router.post("/upload-gallery", isLogIn, allowedTo("admin"), handlePostGallery);
+
+router.delete("/delete-gallery", isLogIn, allowedTo("admin"), handleDeleteGallery);
+
+router.post("/create-adds-on", isLogIn, allowedTo("admin"), createAddsOn);
+
+
 
 
 

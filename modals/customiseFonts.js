@@ -2,17 +2,38 @@ const mongoose = require("mongoose");
 
 
 const customiseFontSchema = mongoose.Schema({
-    font: {
-        type: String,
-        require: true,
-        unique: true
-    },  
-    letterPrice: {
-        type: Number,
-        require: true
-    }
+    neonSign: [{
+        name: {
+            type: String,
+            require: true
+        },
+        font: {
+            type: String,
+            require: true,
+            unique: true
+        },
+        // letterPrice: {
+        //     type: Number,
+        //     require: true
+        // }
+    }],
+    floroSign: [{
+        name: {
+            type: String,
+            require: true
+        },
+        font: {
+            type: String,
+            require: true,
+            unique: true
+        },
+        // letterPrice: {
+        //     type: Number,
+        //     require: true
+        // }
+    }]
 },
-{ timestamps: true }
+    { timestamps: true }
 )
 
 

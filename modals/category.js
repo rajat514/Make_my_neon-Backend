@@ -1,13 +1,17 @@
 const mongoose = require("mongoose");
 
 const categorySchema = mongoose.Schema({
-    category: {
+    type: {
         type: String,
         require: true,
-        unique: true
+        enum: ['Shop Neon', 'Head Light']
     },
     image: {
         type: String
+    },
+    name: {
+        type: String,
+        require: true
     }
 },
     { timestamps: true }

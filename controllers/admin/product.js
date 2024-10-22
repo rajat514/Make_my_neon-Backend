@@ -10,37 +10,41 @@ const handleProduct = async (req, res) => {
 
     const files = req.body.images;
 
+    // console.log('files :', files)
     const value = await imageValidation(files);
-    // console.log('value :', value)
     if (value) {
-        if (value === err) return res.status(500).json({ errorMsg: 'Error uploading the file.' });
+        if (value === 'err') return res.status(500).json({ errorMsg: 'Error uploading the file.' });
         return res.status(400).json({ errorMsg: value });
     }
 
     try {
+        console.log(req.body.colour)
         const error = validationResult(req);
         if (!error.isEmpty) {
             return res.status(400).json({ errorMsg: error.array() });
         }
-        const { categoryId, name, colors, quantity, price, discount, width, height } = matchedData(req);
-
-        const color = await colors.split(',');
-
-        const category = await Category.findById(categoryId);
+        const { categoryId, name, quantity, price, colour, discount, width, height } = matchedData(req);
+        // const sameName = await Product.findOne({slug})
+        // let colourArray = []
+        // if (!Array.isArray(colour)) {
+        //      colour
+        // }
+        const discountedPrice = Math.round(price - ((price * discount) / 100));
 
         if (files.length >= 2) {
             const imagefiles = await files.map(({ name }) => (name));
 
             const newProduct = await Product.create({
-                categoryId: category._id,
+                categoryId,
                 images: imagefiles,
                 name,
-                colors: color,
+                colours: colour,
                 width,
                 height,
                 quantity,
                 price,
-                discount
+                discount,
+                discountedPrice
             })
 
             return res.status(201).json({ successMsg: 'product saved', newProduct: newProduct });
@@ -48,15 +52,16 @@ const handleProduct = async (req, res) => {
         else {
             // console.log(files.name)
             const newProduct = await Product.create({
-                categoryId: category._id,
+                categoryId,
                 images: files.name,
                 name,
-                colors: color,
+                // colors: color,
                 width,
                 height,
                 quantity,
                 price,
-                discount
+                discount,
+                discountedPrice
             })
 
             return res.status(201).json({ successMsg: 'product saved', newProduct: newProduct });
@@ -71,20 +76,22 @@ const handleProduct = async (req, res) => {
 
 const handleUpdateProduct = async (req, res) => {
     try {
-        const productId = req.params.id;
+        const { productId } = req.query;
         const { name, width, height, quantity, price, discount } = req.body;
-        
+
         const updateProduct = await Product.findById(productId);
-        
+
+
         if (name) updateProduct.name = name;
         if (width) updateProduct.width = width;
         if (height) updateProduct.height = height;
         if (quantity) updateProduct.quantity = quantity;
         if (price) updateProduct.price = price;
         if (discount) updateProduct.discount = discount;
-        
+
+        updateProduct.discountedPrice = updateProduct.price - ((updateProduct.price * updateProduct.discount) / 100)
         updateProduct.save();
-        return res.status(200).json({successMsg: 'product updated', updated_Product: updateProduct});
+        return res.status(200).json({ successMsg: 'product updated', updated_Product: updateProduct });
 
     } catch (error) {
         console.log(error);
@@ -94,11 +101,11 @@ const handleUpdateProduct = async (req, res) => {
 
 const handleGetAllProducts = async (req, res) => {
     try {
-        const categoryId = req.params.id;
+        const { categoryId } = req.query;
 
-        const allProducts = await Product.find({ categoryId });
+        const allProducts = await Product.find({ categoryId })
 
-        return res.status(200).json({allProducts : allProducts});
+        return res.status(200).json({ allProducts: allProducts });
 
     } catch (error) {
         console.log(error);
@@ -106,7 +113,38 @@ const handleGetAllProducts = async (req, res) => {
     }
 };
 
+const handleDeleteProduct = async (req, res) => {
+    try {
+        const { productId } = req.query;
+
+        await Product.findByIdAndDelete(productId);
+
+        return res.status(200).json({ successMsg: 'product deleted.' });
+
+    } catch (error) {
+        return res.status(500).json({ errorMsg: error });
+    }
+}
+
+
+const handleGetProductDetails = async (req, res) => {
+    try {
+        const { slug } = req.params;
+
+        const productData = await Product.findOne({ slug }).populate('productReview.userId')//.limit(15)//.sort({ createdAt: -1 });
+
+        productData.productReview.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+        // console.log(productData)
+        return res.status(200).json({ data: productData, totalReviews: productData.productReview.length });
+
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ errorMsg: error });
+    }
+}
+
 
 module.exports = {
-    handleProduct, handleGetAllProducts, handleUpdateProduct
+    handleProduct, handleGetAllProducts, handleUpdateProduct, handleDeleteProduct, handleGetProductDetails
 }

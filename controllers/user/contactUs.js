@@ -1,10 +1,11 @@
 const Contact = require("../../modals/contactUs");
-const { validationResult, matchedData} = require("express-validator");
+const AskQandA = require("../../modals/askQuestions");
+const { validationResult, matchedData } = require("express-validator");
 
 const handleContact = async (req, res) => {
     try {
         const error = validationResult(req);
-        if(!error.isEmpty()){
+        if (!error.isEmpty()) {
             return res.status(400).json({ errors: error.array() });
         }
 
@@ -19,7 +20,7 @@ const handleContact = async (req, res) => {
             message
         });
 
-        return res.status(201).json({ successMsg: 'Message Sent!', message : newMessage });
+        return res.status(201).json({ successMsg: 'Message Sent!', message: newMessage });
 
     } catch (error) {
         console.log(error);
@@ -37,6 +38,8 @@ const handleContact = async (req, res) => {
 //         return res.status(500).json({ errorMsg: error });
 //     }
 // }
+
+
 
 
 module.exports = {

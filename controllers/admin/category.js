@@ -4,6 +4,8 @@ const { validationResult, matchedData } = require("express-validator")
 
 const { imageValidation } = require("../../middleware/image");
 
+
+
 const handleCreateCategory = async (req, res) => {
     try {
         const error = validationResult(req);
@@ -11,24 +13,38 @@ const handleCreateCategory = async (req, res) => {
             return res.status(400).json({ errors: error.array() });
         }
 
-        const { category } = matchedData(req);
+        const { type, name } = matchedData(req);
 
-        const files = req.body.images;
+        if (type === 'Shop Neon') {
+            const files = req.body.images;
 
-        const value = await imageValidation(files);
+            const value = await imageValidation(files);
 
-        if (value) {
-            console.log(value)
-            return res.status(400).json({ errorMsg: value });
+            if (value) {
+                console.log(value)
+                return res.status(400).json({ errorMsg: value });
+            }
+            // console.log(type === 'Shop Neon')
+            const newCategory = await Category.create({
+                type,
+                image: files.name,
+                name
+            })
+            await newCategory.save()
+            return res.status(201).json({ successMsg: "category created!", category: newCategory })
+        }
+        if (type === 'Head Light') {
+            const findHeadLight = await Category.find({ type: 'Head Light' });
+            if (findHeadLight) return res.status(400).json({ errorMsg: 'head light allready exists!' });
+
+            const newCategory = await Category.create({
+                type,
+                name
+            })
+            return res.status(201).json({ successMsg: "category created!", category: newCategory })
         }
 
-        const newCategory = await Category.create({
-            category,
-            image: files.name
-        })
 
-        await newCategory.save()
-        return res.status(201).json({ successMsg: "category created!", category: newCategory })
     } catch (error) {
         console.log(error);
         return res.status(500).json({ errorMsg: error });

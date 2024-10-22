@@ -2,6 +2,11 @@ const mongoose = require("mongoose");
 
 
 const askQuestionSchema = mongoose.Schema({
+    type: {
+        type: String,
+        require: true,
+        enum: ['neon', 'floro', 'shopNeon', 'headLight']
+    },
     question: {
         type: String,
         require: true
@@ -11,7 +16,7 @@ const askQuestionSchema = mongoose.Schema({
         require: true
     }
 },
-    { timestamps : true }
+    { timestamps: true }
 );
 
 

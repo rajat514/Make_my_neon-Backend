@@ -2,25 +2,62 @@ const mongoose = require("mongoose");
 
 
 const customiseFontSizeSchema = mongoose.Schema({
-    name: {
-        type: String,
-        require: true,
-        unique: true
-    },
-    width: {
-        type: Number,
-        require: true
-    },
-    height: {
-        type: Number,
-        require: true
-    },
-    basicPrice: {
-        type: Number,
-        require: true
-    }
+    neonSign: [{
+        name: {
+            type: String,
+            require: true,
+            unique: true
+        },
+        width: {
+            type: Number,
+            require: true
+        },
+        height: {
+            type: Number,
+            require: true
+        },
+        charPrice: {
+            type: Number,
+            require: true
+        },
+        basicPrice: {
+            type: Number,
+            require: true
+        },
+        fontSize: {
+            type: Number,
+            require: true
+        }
+    }],
+    floroSign: [{
+        name: {
+            type: String,
+            require: true,
+            unique: true
+        },
+        width: {
+            type: Number,
+            require: true
+        },
+        height: {
+            type: Number,
+            require: true
+        },
+        basicPrice: {
+            type: Number,
+            require: true
+        },
+        charPrice: {
+            type: Number,
+            require: true
+        },
+        fontSize: {
+            type: Number,
+            require: true
+        }
+    }]
 },
-{ timestamps: true }
+    { timestamps: true }
 )
 
 

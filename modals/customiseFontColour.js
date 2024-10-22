@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 
 
 const customiseFontColourSchema = mongoose.Schema({
+    // name: {
+    //     type: String,
+    //     require: true
+    // },
     colour: {
         type: String,
         require: true,

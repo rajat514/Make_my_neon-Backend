@@ -18,6 +18,7 @@ const couponSchema = mongoose.Schema({
         required: true,
         min: 0,
       },
+      createdAt: { type: Date, default: Date.now, index: { expires: 0 } }
 },
     { timestamps: true }
 );

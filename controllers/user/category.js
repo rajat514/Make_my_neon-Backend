@@ -1,10 +1,12 @@
 const Category = require("../../modals/category");
 const Product = require("../../modals/product")
 
-const handleGetProductCategory = async (req, res) => {
+const handleGetNeonCategory = async (req, res) => {
     try {
-        const allCategory = await Category.find();
-        return res.status(200).json({ allCategory: allCategory })
+        const allCategory = await Category.find({ type: 'Shop Neon' });
+
+        // console.log('category :', category)
+        return res.status(200).json({ data: allCategory })
     } catch (error) {
         console.log(error);
         return res.status(500).json({ errorMsg: error });
@@ -14,19 +16,36 @@ const handleGetProductCategory = async (req, res) => {
 const handleGetProduct = async (req, res) => {
     try {
         // const { categoryId } = req.body;
-        const categoryId = req.params.id;
+        const { categoryId } = req.query;
 
-        const products = await Product.find({ categoryId })
+        // const categoryData = await Category.find()
+        // const category
+        // let limit = 5;
+        // let skip = (limit )
+        const allProducts = await Product.find({ categoryId }).limit(5).skip(5).exec();
+        // console.log("Fetched Products: ", allProducts.length);
 
-        // console.log("products :", products)
-        return res.status(200).json({ allProduct: products })
+        return res.status(200).json({ data: allProducts, length: allProducts.length })
     } catch (error) {
         console.log(error);
         return res.status(500).json({ errorMsg: error });
     }
 }
 
+const handleGetHeadLightCategory = async (req, res) => {
+    try {
+        // const { categoryId } = req.query;
+
+        const allProducts = await Category.findOne({ type: 'Head Light' });
+        return res.status(200).json({ data: allProducts })
+    } catch (error) {
+        return res.status(500).json({ errorMsg: error });
+    }
+};
+
+
+
 
 module.exports = {
-    handleGetProductCategory, handleGetProduct
+    handleGetNeonCategory, handleGetProduct, handleGetHeadLightCategory
 }

@@ -28,11 +28,11 @@ const validateUserSignIn = [
 ];
 
 const validateCategory = [
-    body('category')
-        .notEmpty().withMessage('please enter the category!'),
+    body('name')
+        .notEmpty().withMessage('please enter the name!'),
 
-    // body('image')
-    //     .notEmpty().withMessage('please enter the image!')
+    body('type')
+        .notEmpty().withMessage('please enter the type!')
 ];
 
 const validateProduct = [
@@ -42,8 +42,8 @@ const validateProduct = [
     body('images')
         .notEmpty().withMessage('please enter the image!'),
 
-    body('colors')
-        .isString().withMessage('please enter the correct detail!'),
+    body('colour')
+        .isString().isArray().withMessage('please enter the correct detail!'),
 
     body('quantity')
         .notEmpty().isNumeric().withMessage('please enter the correct detail!'),
@@ -97,10 +97,13 @@ const validateContact = [
 
 const validateQandA = [
     body('question')
-        .notEmpty().isLength({ max: 50}).withMessage('please enter the correct detail!'),
+        .notEmpty().isLength({ max: 50 }).withMessage('please enter the correct detail!'),
 
     body('answer')
-        .notEmpty().isLength({ max :100}).withMessage('please enter the correct detail!'),
+        .notEmpty().isLength({ max: 1000 }).withMessage('please enter the correct detail!'),
+
+    body('type')
+        .notEmpty().withMessage('please enter the correct detail!'),
 ]
 
 

@@ -16,7 +16,8 @@ const createNewCoupon = async (req, res) => {
         const newCoupon = await Coupon.create({
             code,
             expires,
-            discount
+            discount,
+            createdAt: expires
         });
 
         console.log('coupon :', newCoupon);
@@ -53,6 +54,7 @@ const updateCoupon = async (req, res) => {
         if(code) coupon.code = code;
         if(expires) coupon.expires = expires;
         if(discount) coupon.discount = discount;
+        if(expires) coupon.createdAt = expires;
 
         coupon.save();
         return res.status(200).json({ successMsg : 'Coupon updated', coupon : coupon });
