@@ -5,7 +5,7 @@ const { validateCategory, validateProduct, validateCoupon, validateQandA } = req
 
 const { handleCreateCategory, handleGetCategory } = require("../controllers/admin/category");
 
-const { handleProduct, handleGetAllProducts, handleUpdateProduct, handleDeleteProduct } = require("../controllers/admin/product");
+const { handleProduct, handleGetAllProducts, handleGetProducts, handleUpdateProduct, handleDeleteProduct } = require("../controllers/admin/product");
 
 const { handlePostFonts } = require("../controllers/admin/customiseFonts");
 
@@ -36,11 +36,13 @@ router.get("/get-category", isLogIn, allowedTo("admin"), handleGetCategory);
 
 router.post("/product", validateProduct, isLogIn, allowedTo("admin"), handleProduct);
 
-router.get("/all-products/:categoryId/:page/:limit", isLogIn, allowedTo("admin"), handleGetAllProducts);
+router.get("/all-products/:categoryId/:page/:limit", isLogIn, allowedTo("admin"), handleGetProducts);
+
+router.get("/products/:page/:limit", isLogIn, allowedTo("admin"), handleGetAllProducts);
 
 router.delete("/delete-product", isLogIn, allowedTo("admin"), handleDeleteProduct)
 
-router.put("/update-product", isLogIn, allowedTo("admin"), handleUpdateProduct)
+router.put("/update-product/:productId", isLogIn, allowedTo("admin"), handleUpdateProduct)
 
 router.post("/post-font", isLogIn, allowedTo("admin"), handlePostFonts);
 
