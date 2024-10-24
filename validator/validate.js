@@ -42,11 +42,11 @@ const validateProduct = [
     body('images')
         .notEmpty().withMessage('please enter the image!'),
 
-    body('colour')
-        .isString().isArray().withMessage('please enter the correct detail!'),
+    // body('colour')
+    //     .isString().isArray().withMessage('please enter the correct detail!'),
 
-    body('quantity')
-        .notEmpty().isNumeric().withMessage('please enter the correct detail!'),
+    // body('quantity')
+    //     .notEmpty().isNumeric().withMessage('please enter the correct detail!'),
 
     body('name')
         .notEmpty().withMessage('please enter the name!'),
@@ -55,13 +55,13 @@ const validateProduct = [
         .notEmpty().isNumeric().withMessage('please enter the price!'),
 
     body('discount')
-        .isNumeric().withMessage('please enter the correct detail!'),
+        .optional({ nullable: true }).isNumeric().withMessage('please enter the discount!'),
 
     body('width')
-        .isNumeric().withMessage('please enter the correct detail!'),
+        .isNumeric().withMessage('please enter the correct width!'),
 
     body('height')
-        .isNumeric().withMessage('please enter the correct detail!')
+        .isNumeric().withMessage('please enter the correct height!')
 ];
 
 

@@ -16,21 +16,23 @@ const productSchema = mongoose.Schema({
     },
     images: [],
     // colors: [],
-    colour: [{
-        // name: String,
-        colourCode: String
-    }],
+    // colour: [{
+    //     // name: String,
+    //     colourCode: String
+    // }],
     width: {
-        type: Number
+        type: Number,
+        require: true
     },
     height: {
-        type: Number
-    },
-    quantity: {
         type: Number,
-        require: true,
-        default: '1'
+        require: true
     },
+    // quantity: {
+    //     type: Number,
+    //     require: true,
+    //     default: '1'
+    // },
     price: {
         type: Number,
         require: true

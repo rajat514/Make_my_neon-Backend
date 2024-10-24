@@ -36,7 +36,7 @@ router.get("/get-category", isLogIn, allowedTo("admin"), handleGetCategory);
 
 router.post("/product", validateProduct, isLogIn, allowedTo("admin"), handleProduct);
 
-router.get("/all-products", isLogIn, allowedTo("admin"), handleGetAllProducts);
+router.get("/all-products/:categoryId/:page/:limit", isLogIn, allowedTo("admin"), handleGetAllProducts);
 
 router.delete("/delete-product", isLogIn, allowedTo("admin"), handleDeleteProduct)
 

@@ -18,18 +18,15 @@ const handleProduct = async (req, res) => {
     }
 
     try {
-        console.log(req.body.colour)
+
         const error = validationResult(req);
         if (!error.isEmpty) {
             return res.status(400).json({ errorMsg: error.array() });
         }
-        const { categoryId, name, quantity, price, colour, discount, width, height } = matchedData(req);
-        // const sameName = await Product.findOne({slug})
-        // let colourArray = []
-        // if (!Array.isArray(colour)) {
-        //      colour
-        // }
-        const discountedPrice = Math.round(price - ((price * discount) / 100));
+        const { categoryId, name, price, discount, width, height } = matchedData(req);
+
+        let discountedPrice = Math.round(price - ((price * discount) / 100));
+
 
         if (files.length >= 2) {
             const imagefiles = await files.map(({ name }) => (name));
@@ -38,10 +35,10 @@ const handleProduct = async (req, res) => {
                 categoryId,
                 images: imagefiles,
                 name,
-                colours: colour,
+                // colours: colour,
                 width,
                 height,
-                quantity,
+
                 price,
                 discount,
                 discountedPrice
@@ -58,7 +55,7 @@ const handleProduct = async (req, res) => {
                 // colors: color,
                 width,
                 height,
-                quantity,
+
                 price,
                 discount,
                 discountedPrice
@@ -77,7 +74,7 @@ const handleProduct = async (req, res) => {
 const handleUpdateProduct = async (req, res) => {
     try {
         const { productId } = req.query;
-        const { name, width, height, quantity, price, discount } = req.body;
+        const { name, width, height, price, discount } = req.body;
 
         const updateProduct = await Product.findById(productId);
 
@@ -85,7 +82,6 @@ const handleUpdateProduct = async (req, res) => {
         if (name) updateProduct.name = name;
         if (width) updateProduct.width = width;
         if (height) updateProduct.height = height;
-        if (quantity) updateProduct.quantity = quantity;
         if (price) updateProduct.price = price;
         if (discount) updateProduct.discount = discount;
 
@@ -101,11 +97,17 @@ const handleUpdateProduct = async (req, res) => {
 
 const handleGetAllProducts = async (req, res) => {
     try {
-        const { categoryId } = req.query;
+        const { categoryId, page, limit } = req.params;
 
-        const allProducts = await Product.find({ categoryId })
+        let skipNumber = 0;
+        const limitNumber = parseInt(limit, 10);
+        skipNumber = (page - 1) * limit;
 
-        return res.status(200).json({ allProducts: allProducts });
+
+        const allProducts = await Product.find({ categoryId }).skip(skipNumber).limit(limitNumber).exec();
+        const totalCount = await Product.countDocuments({ categoryId });
+
+        return res.status(200).json({ allProducts, totalCount });
 
     } catch (error) {
         console.log(error);

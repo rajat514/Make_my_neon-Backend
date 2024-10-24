@@ -16,16 +16,17 @@ const handleGetNeonCategory = async (req, res) => {
 const handleGetProduct = async (req, res) => {
     try {
         // const { categoryId } = req.body;
-        const { categoryId } = req.query;
+        const { categoryId, skip, limit } = req.query;
 
-        // const categoryData = await Category.find()
-        // const category
-        // let limit = 5;
-        // let skip = (limit )
-        const allProducts = await Product.find({ categoryId }).limit(5).skip(5).exec();
-        // console.log("Fetched Products: ", allProducts.length);
+        const skipNumber = parseInt(skip, 10);
+        const limitNumber = parseInt(limit, 10);
 
-        return res.status(200).json({ data: allProducts, length: allProducts.length })
+        const allProducts = await Product.find({ categoryId }).skip(skipNumber).limit(limitNumber).exec();
+
+        const totalProducts = await Product.countDocuments({ categoryId });
+
+        return res.status(200).json({ data: allProducts, length: totalProducts });
+
     } catch (error) {
         console.log(error);
         return res.status(500).json({ errorMsg: error });
