@@ -9,7 +9,7 @@ const { imageValidation } = require("../../middleware/image")
 const handleProduct = async (req, res) => {
 
     let files = req.body.images;
-    // console.log('files :', files)
+    console.log('files :', files)
     if (!Array.isArray(files)) {
         files = [files]
     }
@@ -32,7 +32,7 @@ const handleProduct = async (req, res) => {
 
 
         // if (files.length >= 2) {
-        const imagefiles = await files.map(({ name }) => (name));
+        const imagefiles = files.map(({ name, mimetype }) => ({ name, mimetype }));
 
         const newProduct = await Product.create({
             categoryId,
@@ -78,9 +78,9 @@ const handleUpdateProduct = async (req, res) => {
     try {
         const { productId } = req.params;
         const { name, width, height, price, discount } = req.body;
-
+        // console.log(req.body)
         let files = req.body.images;
-        console.log(files)
+        // console.log('files :', files)
         const updateProduct = await Product.findById(productId);
 
         if (files) {
@@ -92,7 +92,7 @@ const handleUpdateProduct = async (req, res) => {
                 if (value === 'err') return res.status(500).json({ errorMsg: 'Error uploading the file.' });
                 return res.status(400).json({ errorMsg: value });
             }
-            const imagefiles = await files.map(({ name }) => (name));
+            const imagefiles = files.map(({ name, mimetype }) => ({ name, mimetype }));
             if (files) updateProduct.images = imagefiles;
         }
 

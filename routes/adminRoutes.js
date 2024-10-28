@@ -3,7 +3,7 @@ const router = express.Router();
 
 const { validateCategory, validateProduct, validateCoupon, validateQandA } = require("../validator/validate");
 
-const { handleCreateCategory, handleGetCategory } = require("../controllers/admin/category");
+const { handleCreateCategory, handleGetCategory, handleUpdateCategory, handleDeleteCategory } = require("../controllers/admin/category");
 
 const { handleProduct, handleGetAllProducts, handleGetProducts, handleUpdateProduct, handleDeleteProduct } = require("../controllers/admin/product");
 
@@ -13,7 +13,7 @@ const { handlePostFontColour } = require("../controllers/admin/customiseFontColo
 
 const { handlePostFontSize } = require("../controllers/admin/customiseFontSize");
 
-const { handleGetAllOrder, handleUpdateOrderStatus } = require("../controllers/admin/order");
+const { handleGetAllOrder, handleUpdateOrderStatus, handleDelateOrder } = require("../controllers/admin/order");
 
 const { isLogIn, allowedTo } = require("../middleware/auth");
 
@@ -34,6 +34,10 @@ router.post("/create-category", validateCategory, isLogIn, allowedTo("admin"), h
 
 router.get("/get-category", isLogIn, allowedTo("admin"), handleGetCategory);
 
+router.put("/update-category", isLogIn, allowedTo("admin"), handleUpdateCategory);
+
+router.delete("/delete-category/:categoryId", isLogIn, allowedTo("admin"), handleDeleteCategory);
+
 router.post("/product", validateProduct, isLogIn, allowedTo("admin"), handleProduct);
 
 router.get("/all-products/:categoryId/:page/:limit", isLogIn, allowedTo("admin"), handleGetProducts);
@@ -52,7 +56,7 @@ router.post("/post-font-size", isLogIn, allowedTo("admin"), handlePostFontSize);
 
 router.get("/all-orders", isLogIn, allowedTo("admin"), handleGetAllOrder);
 
-router.post("/update-order-status/:id", isLogIn, allowedTo("admin"), handleUpdateOrderStatus);
+router.post("/update-order-status", isLogIn, allowedTo("admin"), handleUpdateOrderStatus);
 
 router.post("/create-coupon", isLogIn, allowedTo("admin"), validateCoupon, createNewCoupon);
 
@@ -73,6 +77,8 @@ router.post("/upload-gallery", isLogIn, allowedTo("admin"), handlePostGallery);
 router.delete("/delete-gallery", isLogIn, allowedTo("admin"), handleDeleteGallery);
 
 router.post("/create-adds-on", isLogIn, allowedTo("admin"), createAddsOn);
+
+router.delete("/delete-order/:orderId", isLogIn, allowedTo("admin"), handleDelateOrder)
 
 
 

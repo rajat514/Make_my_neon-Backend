@@ -8,20 +8,41 @@ const handlePostOrder = async (req, res) => {
     try {
         const { code, shippingAddress, paymentMethod } = req.body;
         // console.log('code :', code)
-        
+
+
+
         const coupon = await Coupon.findOne({ code })
-        // console.log('coupon :', coupon)
         const userId = req.user._id.toString();
-        const cart = await Cart.findOne({ userId });
-        const customiseProducts = cart.customiseProducts;
+        const cart = await Cart.findOne({ userId }).populate("regularProducts.productId");
+        // console.log(cart.regularProducts)
+        // res.json({ cart })
+        customiseProducts = cart.customiseProducts;
         const regularProducts = cart.regularProducts;
 
         await Cart.deleteOne({ _id: cart._id });
-        if(coupon){
-            cart.totalPrice = cart.totalPrice - ( cart.totalPrice * coupon.discount ) / 100;
+        if (coupon) {
+            cart.totalPrice = cart.totalPrice - (cart.totalPrice * coupon.discount) / 100;
         }
-        
+
+        let orderId
+        let counter = await Order.findOne().sort({ _id: -1 });
+        // console.log(counter)
+        if (!counter) {
+            const newOrder = await Order.create({
+                orderId,
+                userId,
+                cartItems: { customiseProducts, regularProducts },
+                totalCost: cart.totalPrice,
+                shippingAddress,
+                paymentMethod
+            });
+            return res.status(201).json({ successMsg: 'Order Successful', order: newOrder });
+        }
+
+        orderId = counter.orderId += 1;
+
         const newOrder = await Order.create({
+            orderId,
             userId,
             cartItems: { customiseProducts, regularProducts },
             totalCost: cart.totalPrice,
@@ -30,7 +51,7 @@ const handlePostOrder = async (req, res) => {
         });
 
         // console.log('order :', this.newOrder)
-        newOrder.save();
+        // newOrder.save();
         return res.status(201).json({ successMsg: 'Order Successful', order: newOrder });
 
     } catch (error) {
@@ -91,6 +112,10 @@ const handleGetAllOrder = async (req, res) => {
         return res.status(500).json({ errorMsg: error });
     }
 };
+
+
+
+
 
 
 

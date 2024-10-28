@@ -2,13 +2,25 @@ const mongoose = require("mongoose");
 
 
 const orderSchema = mongoose.Schema({
+    orderId: {
+        type: Number,
+        default: 123420,
+        unique: true
+    },
     userId: {
         type: mongoose.ObjectId,
         ref: 'users',
         require: true
     },
-    cartItems: [],
-    totalCost:{
+    cartItems: [
+        // customiseProducts: [{}],
+        // regularProducts: [{
+        //     productId: {
+        //         type:mongoo
+        //     }
+        // }]
+    ],
+    totalCost: {
         type: Number,
         require: true
     },
@@ -16,12 +28,12 @@ const orderSchema = mongoose.Schema({
         type: String,
         require: true,
     },
-    paymentMethod:{
+    paymentMethod: {
         type: String,
-        enum: ['card','cash'],
+        enum: ['card', 'cash'],
         default: 'cash'
     },
-    isPaid:{
+    isPaid: {
         type: Boolean,
         default: false
     },
@@ -34,7 +46,7 @@ const orderSchema = mongoose.Schema({
     // },
     status: {
         type: String,
-        enum: ['pending', 'rejected', 'confirmed', 'delivered', 'cancelled'],
+        enum: ['pending', 'cancel', 'success', 'delivered'],
         default: 'pending'
     }
 });

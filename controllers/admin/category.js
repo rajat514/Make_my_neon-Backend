@@ -35,6 +35,8 @@ const handleCreateCategory = async (req, res) => {
         }
         if (type === 'Head Light') {
             const findHeadLight = await Category.find({ type: 'Head Light' });
+            if (findHeadLight.length > 1) return res.status(400).json({ errorMsg: 'in the Head Light ' });
+
             if (findHeadLight) return res.status(400).json({ errorMsg: 'head light allready exists!' });
 
             const newCategory = await Category.create({
@@ -58,7 +60,56 @@ const handleGetCategory = async (req, res) => {
     return res.status(200).json({ allCategory: allCategory })
 }
 
+const handleUpdateCategory = async (req, res) => {
+    try {
+        const { categoryId, name } = req.body;
+
+        const categoryData = await Category.findOne({ _id: categoryId });
+        if (!categoryData) return res.status(400).json({ errorMsg: 'category not found!' });
+
+        let files = req.body.image;
+
+        if (files) {
+            // if (!Array.isArray(files)) {
+            //     files = [files]
+            // }
+            const value = await imageValidation(files);
+
+            if (value) {
+                console.log(value)
+                return res.status(400).json({ errorMsg: value });
+            }
+            // const imagefiles = files.map(({ name }) => (name));
+            if (files) categoryData.image = files.name
+        }
+
+        if (name) categoryData.name = name;
+
+        categoryData.save()
+
+        return res.status(200).json({ successMsg: 'category updated!' })
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ errorMsg: error });
+    }
+};
+
+const handleDeleteCategory = async (req, res) => {
+    try {
+        const { categoryId } = req.params;
+
+        await Category.findByIdAndDelete(categoryId)
+
+        return res.status(200).json({ successMsg: 'category deleted' });
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ errorMsg: error });
+    }
+}
+
 
 module.exports = {
-    handleCreateCategory, handleGetCategory
+    handleCreateCategory, handleGetCategory, handleUpdateCategory, handleDeleteCategory
 }

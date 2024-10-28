@@ -154,7 +154,7 @@ const handleProductCart = async (req, res) => {
             return res.status(201).json({ successMsg: 'cart added', products: newCart });
         }
         else {
-            
+
             const sameProduct = await cart.regularProducts.find((item) => item.productId.toString() === productId.toString())
             // console.log('cart :', sameProduct.addsOn)
             if (sameProduct) {
@@ -251,8 +251,11 @@ const handleGetCart = async (req, res) => {
         const cart = await Cart.findOne({ userId: userId }).populate("regularProducts.productId")
         // console.log(cart.customiseProducts.length)
         // console.log(cart.regularProducts.length)
-        const cartLength = +cart.customiseProducts?.length + +cart.regularProducts?.length
+        let cartLength
+        if (cart) {
+            cartLength = +cart.customiseProducts?.length + +cart.regularProducts?.length
 
+        }
         return res.status(200).json({ Cart: cart, cartLength: cartLength });
 
     } catch (error) {
