@@ -5,6 +5,9 @@ const tokenSchema = mongoose.Schema({
         type: String,
         require: true
     },
+    role: {
+        type: String,
+    },
     token: {
         type: String,
         require: true

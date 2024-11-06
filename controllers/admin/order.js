@@ -5,7 +5,7 @@ const Product = require("../../modals/product");
 
 const handleGetAllOrder = async (req, res) => {
     try {
-        const allOrder = await Order.find().populate('userId');
+        const allOrder = await Order.find().populate('userId').populate('cartItems.regularProducts.productId');
 
         res.status(200).json({ allOrders: allOrder });
 

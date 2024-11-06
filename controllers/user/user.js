@@ -69,10 +69,11 @@ const handleSignIn = async (req, res) => {
             // Save the token to the database
             const newUserToken = await TokenDB.create({
                 email,
+                role: user.role,
                 token: Token
             });
 
-            // console.log('newUserToken:', newUserToken);
+            // console.log('req.user:', req.user);
 
             // Return success response
             return res.status(200).json({ successMsg: 'Log in successfully.', data: newUserToken, token: Token });

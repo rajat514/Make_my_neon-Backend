@@ -12,14 +12,20 @@ const orderSchema = mongoose.Schema({
         ref: 'users',
         require: true
     },
-    cartItems: [
-        // customiseProducts: [{}],
-        // regularProducts: [{
-        //     productId: {
-        //         type:mongoo
-        //     }
-        // }]
-    ],
+    cartItems: {
+        customiseProducts: [{
+            // Define fields specific to customizeProducts if needed
+        }],
+        regularProducts: [{
+            productId: {
+                type: mongoose.ObjectId,
+                ref: 'products', // Ensure this matches the name of your Product model
+                required: true
+            },
+            quantity: Number,
+            // Add other fields like price, etc.
+        }]
+    },
     totalCost: {
         type: Number,
         require: true

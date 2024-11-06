@@ -14,11 +14,12 @@ const handlePostOrder = async (req, res) => {
         const coupon = await Coupon.findOne({ code })
         const userId = req.user._id.toString();
         const cart = await Cart.findOne({ userId }).populate("regularProducts.productId");
-        // console.log(cart.regularProducts)
+        // console.log('cart :', cart.regularProducts)
+        // console.log('cart :', cart.regularProducts.images)
         // res.json({ cart })
         customiseProducts = cart.customiseProducts;
         const regularProducts = cart.regularProducts;
-
+        // console.log('regularProducts :', regularProducts)
         await Cart.deleteOne({ _id: cart._id });
         if (coupon) {
             cart.totalPrice = cart.totalPrice - (cart.totalPrice * coupon.discount) / 100;
